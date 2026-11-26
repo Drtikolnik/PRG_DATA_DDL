@@ -4,7 +4,7 @@ import java.util.*;
 void main() {
     Scanner sc = new Scanner(System.in);
 
-    String url = "jdbc:mysql://localhost/pujcovna_aut"; // URL databáze: server, port, název DB
+    String url = "jdbc:mysql://localhost:3306/pujcovna_aut"; // URL databáze: server, port, název DB
     String username = "root"; // Uživatelské jméno
     String password = ""; // Heslo k databázi
     MetodyTabulek m =  new MetodyTabulek();
@@ -23,30 +23,49 @@ void main() {
     try (Connection conn = DriverManager.getConnection(url, username, password)) {
         System.out.println("Připojení k databázi bylo úspěšné!");
 // Výpis dat z tabulky+
-        String hracINSERT = "INSERT INTO hrac (jmeno, level, zlato) VALUES (?, ?, ?)";
 
-        try (PreparedStatement stmt = conn.prepareStatement(hracINSERT)){
-            stmt.setString(1, jmenoZadane);
-            stmt.setInt(2, levelZadany);
-            stmt.setInt(3, zlatoZadane);
+        boolean pokracovat = true;
+        while (pokracovat) {
 
-            // executeUpdate() se používá pro INSERT, UPDATE a DELETE
-            int radekPridano = stmt.executeUpdate();
+            System.out.println("---MENU---");
+            System.out.println("1 - Vytvořit databázi");
+            System.out.println("2 - Přidat auto");
+            System.out.println("3 - Najít auta");
+            int menu = sc.nextInt();
+            sc.nextLine();
 
-            if (radekPridano > 0) {
-                System.out.println("Hráč " + jmenoZadane + " byl úspěšně vytvořen!");
+            switch (menu) {
+                case 1:
+                    m.vytvoritAuta(conn);
+                    break;
+
+                case 2:
+                    m.insertAuta(conn);
+                    break;
+
+                case 3:
+                    m.hledatAutaKriteria(conn);
+                    break;
+
+
+
+                default:
+                    break;
+
             }
-        } catch (SQLException e) {
-            System.err.println("Problém s SQL.");
-            e.printStackTrace();
+
+
+
+
+
+
+
+
+
+
+
+
         }
-
-
-
-
-
-
-
 
 
 
@@ -54,7 +73,8 @@ void main() {
             SQLException e)
 
     {
-        System.err.println("Problém s připojením.");
+        System.out.println(e);
+        //System.err.println("Problém s připojením.");
     }
 
 }
